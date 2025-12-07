@@ -22,7 +22,7 @@ public class FullTestMod {
     private boolean lastRKeyState = false;
     private int counter = 0;
     private boolean markFirst = true;
-
+    private double tempx = 0, tempz = 0;
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -116,44 +116,48 @@ public class FullTestMod {
                 }
                 press(mc.gameSettings.keyBindAttack);
 
-                if (tickCounter >= 1544) {
+                if (tempz == mc.thePlayer.posZ  && tickCounter % 2 == 0 && tickCounter > 10) {
                     release(mc.gameSettings.keyBindLeft);
                     phase++;
                     tickCounter = 0;
                 }
+                tempz = mc.thePlayer.posZ;
                 break;
 
             case 2: // 向前走 2 秒
                 if (tickCounter == 1) press(mc.gameSettings.keyBindForward);
                 press(mc.gameSettings.keyBindAttack);
 
-                if (tickCounter >= 40) {
+                if (tempx == mc.thePlayer.posX && tickCounter % 2 == 0 && tickCounter > 10) {
                     release(mc.gameSettings.keyBindForward);
                     phase++;
                     tickCounter = 0;
                 }
+                tempx = mc.thePlayer.posX;
                 break;
 
             case 3: // 向右走 10 秒
                 if (tickCounter == 1) press(mc.gameSettings.keyBindRight);
                 press(mc.gameSettings.keyBindAttack);
 
-                if (tickCounter >= 1544) {
+                if (tempz == mc.thePlayer.posZ && tickCounter % 2 == 0 && tickCounter > 10) {
                     release(mc.gameSettings.keyBindRight);
                     phase++;
                     tickCounter = 0;
                 }
+                tempz = mc.thePlayer.posZ;
                 break;
 
             case 4: // 向前走 2 秒，然后回到 phase 0
                 if (tickCounter == 1) press(mc.gameSettings.keyBindForward);
                 press(mc.gameSettings.keyBindAttack);
 
-                if (tickCounter >= 40) {
+                if (tempx == mc.thePlayer.posX && tickCounter % 2 == 0 && tickCounter > 10) {
                     release(mc.gameSettings.keyBindForward);
                     phase = 0;
                     tickCounter = 0;
                 }
+                tempx = mc.thePlayer.posX;
                 break;
 
             case 5: //异常模块
