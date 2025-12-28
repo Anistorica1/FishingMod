@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
-@Mod(modid = "farmingmod_v1", name = "Move Mod", version = "1.0")
+@Mod(modid = "Fishingmod_v1", name = "Move Mod", version = "1.0")
 public class FullTestMod {
 
     private final Minecraft mc = Minecraft.getMinecraft();
