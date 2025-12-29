@@ -5,6 +5,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.BlockPos;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,7 +17,12 @@ import org.lwjgl.input.Keyboard;
 public class FullTestMod {
 
     private final Minecraft mc = Minecraft.getMinecraft();
-
+    private float startYaw, startPitch;
+    private float targetYaw, targetPitch;
+    private int smoothTicks = 0;
+    private int maxSmoothTicks = 0;
+    private boolean isSmoothLooking = false;
+    public static FullTestMod instance;
     private boolean running = false;
     private int tickCounter = 0;
     private boolean lastRKeyState = false;
@@ -26,10 +32,12 @@ public class FullTestMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
+        ClientCommandHandler.instance.registerCommand(new CommandSmoothLook());
     }
-
+    public FullTestMod(){instance = this;}
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        handleSmoothLook2();
         if (mc.thePlayer == null || mc.theWorld == null) return;
         if (event.phase == TickEvent.Phase.END) {
             autoFishingController.onTick();
@@ -81,5 +89,50 @@ public class FullTestMod {
         release(mc.gameSettings.keyBindSneak);
         release(mc.gameSettings.keyBindAttack);
     }
+    public float wrapAngleTo180_float(float angle) {
+        angle %= 360.0F;
+        if (angle >= 180.0F) angle -= 360.0F;
+        if (angle < -180.0F) angle += 360.0F;
+        return angle;
+    }
+    public void smoothLook(float yaw, float pitch, float durationSeconds) {
+        this.startYaw = mc.thePlayer.rotationYaw;
+        this.startPitch = mc.thePlayer.rotationPitch;
 
+        this.targetYaw = yaw;
+        this.targetPitch = pitch;
+
+        this.maxSmoothTicks = (int)(durationSeconds * 20); // 秒 → tick
+        this.smoothTicks = 0;
+
+        this.isSmoothLooking = true;
+    }
+    private void handleSmoothLook2(){
+        if (this.isSmoothLooking) {
+            if (smoothTicks >= maxSmoothTicks) {
+                mc.thePlayer.rotationYaw = targetYaw;
+                mc.thePlayer.rotationPitch = targetPitch;
+                this.isSmoothLooking = false;
+            } else {
+                float t = (float)smoothTicks / maxSmoothTicks; // 0~1
+                float k = easeInOut(t); // 使用缓动
+
+                float diffYaw = wrapAngleTo180_float(targetYaw - startYaw);
+                float newYaw = startYaw + diffYaw * k;
+                float newPitch = startPitch + (targetPitch - startPitch) * k;
+
+                mc.thePlayer.rotationYaw = newYaw;
+                mc.thePlayer.prevRotationYaw = newYaw;
+
+                mc.thePlayer.rotationPitch = newPitch;
+                mc.thePlayer.prevRotationPitch = newPitch;
+
+                smoothTicks++;
+            }
+        }
+
+    }
+    private float easeInOut(float t) {
+        return (float)(t * t * (3 - 2 * t));
+    }
 }

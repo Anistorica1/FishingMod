@@ -22,7 +22,6 @@ public class AutoFishingController {
 
     private FishingState state = FishingState.IDLE;
     private int stateTick = 0;   // 进入当前状态后经过的 tick 数
-
     public void start() {
         state = FishingState.CASTING;
         stateTick = 0;
@@ -30,7 +29,6 @@ public class AutoFishingController {
                 "start"
         ));
     }
-
     public void stop() {
         state = FishingState.IDLE;
         stateTick = 0;
@@ -38,7 +36,6 @@ public class AutoFishingController {
                 "stop"
         ));
     }
-
     public void onTick() {
         if (state == FishingState.IDLE) return;
 
@@ -60,9 +57,11 @@ public class AutoFishingController {
             case COOLDOWN:
                 handleCooldown();
                 break;
+            case HYPERION:
+                handleHyperion();
+                break;
         }
     }
-
     private void changeState(FishingState newState) {
         state = newState;
         stateTick = 0;
@@ -88,15 +87,10 @@ public class AutoFishingController {
                 "hook.motionY : " + hook.motionY
         ));
         // 鱼上钩：鱼钩被猛地下拉
-        if (hook.motionY < -0.08) {
-            changeState(FishingState.BITE);
+        if (hook.motionY < -0.04) {
+            changeState(FishingState.HYPERION);
         }
     }
-
-
-
-
-
     private void handleBite() {
         rightClick();
         changeState(FishingState.COOLDOWN);
@@ -131,5 +125,24 @@ public class AutoFishingController {
             changeState(FishingState.COOLDOWN);
         }
     }
+    // 切换到指定的快捷栏槽位（0~8）
+    private void switchHotbarSlot(int slot) {
+        if (slot < 0 || slot > 8) return;
+        mc.thePlayer.inventory.currentItem = slot;
+    }
 
+    private void handleHyperion() {
+        if (stateTick == 1) {
+            rightClick();
+            switchHotbarSlot(1);
+            FullTestMod.instance.smoothLook(0.0f,90.0f,0.5f);
+        }
+        if (stateTick == 22){
+            rightClick();
+            switchHotbarSlot(0);
+            FullTestMod.instance.smoothLook(0.0f,30.0f,0.5f);
+            changeState(FishingState.COOLDOWN);
+        }
+
+    }
 }

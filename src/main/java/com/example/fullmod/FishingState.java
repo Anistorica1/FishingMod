@@ -6,5 +6,6 @@ public enum FishingState {
     WAITING,        // 等待上钩
     BITE,           // 检测到鱼上钩
     REELING,        // 收竿
-    COOLDOWN        // 冷却
+    COOLDOWN,       // 冷却
+    HYPERION        // Hype右键
 }
