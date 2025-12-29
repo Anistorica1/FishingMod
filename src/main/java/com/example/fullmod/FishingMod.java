@@ -2,7 +2,6 @@ package com.example.fullmod;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -14,7 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 @Mod(modid = "Fishingmod_v1", name = "Move Mod", version = "1.0")
-public class FullTestMod {
+public class FishingMod {
 
     private final Minecraft mc = Minecraft.getMinecraft();
     private float startYaw, startPitch;
@@ -22,7 +21,7 @@ public class FullTestMod {
     private int smoothTicks = 0;
     private int maxSmoothTicks = 0;
     private boolean isSmoothLooking = false;
-    public static FullTestMod instance;
+    public static FishingMod instance;
     private boolean running = false;
     private int tickCounter = 0;
     private boolean lastRKeyState = false;
@@ -34,7 +33,7 @@ public class FullTestMod {
         MinecraftForge.EVENT_BUS.register(this);
         ClientCommandHandler.instance.registerCommand(new CommandSmoothLook());
     }
-    public FullTestMod(){instance = this;}
+    public FishingMod(){instance = this;}
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         handleSmoothLook2();
@@ -65,9 +64,7 @@ public class FullTestMod {
         // 防止空指针
 //        if (mc.objectMouseOver == null || mc.objectMouseOver.getBlockPos() == null) return;
 //        BlockPos pos = mc.objectMouseOver.getBlockPos();
-
     }
-
     private void clickBlock(BlockPos pos) {
         if (mc.objectMouseOver == null) return;
         mc.playerController.onPlayerDamageBlock(pos, mc.objectMouseOver.sideHit);
@@ -130,7 +127,6 @@ public class FullTestMod {
                 smoothTicks++;
             }
         }
-
     }
     private float easeInOut(float t) {
         return (float)(t * t * (3 - 2 * t));

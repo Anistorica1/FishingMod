@@ -2,8 +2,6 @@ package com.example.fullmod;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
 public class CommandSmoothLook extends CommandBase {
@@ -30,7 +28,7 @@ public class CommandSmoothLook extends CommandBase {
             float pitch = Float.parseFloat(args[1]);
             float time = Float.parseFloat(args[2]);
 
-            FullTestMod.instance.smoothLook(yaw,pitch,time);
+            FishingMod.instance.smoothLook(yaw,pitch,time);
         } catch (Exception e) {
             sender.addChatMessage(new ChatComponentText("§c坐标必须是整数"));
         }

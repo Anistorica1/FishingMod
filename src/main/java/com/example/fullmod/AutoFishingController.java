@@ -70,6 +70,7 @@ public class AutoFishingController {
     private void handleCasting() {
         if (stateTick == 1) {
             rightClick();
+            FishingMod.instance.smoothLook(0.0f,30.0f,0.5f);
         }
 
         // 给服务器 10 tick 反应
@@ -85,9 +86,9 @@ public class AutoFishingController {
             return;
         }
         if(stateTick % 20 == 0)
-            FullTestMod.instance.smoothLook(-0.5f+RANDOM.nextFloat(),29.5f+RANDOM.nextFloat(),0.2f);
+            FishingMod.instance.smoothLook(-0.5f+RANDOM.nextFloat(),29.5f+RANDOM.nextFloat(),0.2f);
         // 鱼上钩：鱼钩被猛地下拉
-        if (hook.motionY < -0.04) {
+        if (hook.motionY < -0.02) {
             changeState(FishingState.HYPERION);
         }
     }
@@ -135,12 +136,12 @@ public class AutoFishingController {
         if (stateTick == 1) {
             rightClick();
             switchHotbarSlot(1);
-            FullTestMod.instance.smoothLook(0.0f,90.0f,0.5f);
+            FishingMod.instance.smoothLook(0.0f,90.0f,0.5f);
         }
-        if (stateTick == 22){
+        if (stateTick >= 11){
             rightClick();
             switchHotbarSlot(0);
-            FullTestMod.instance.smoothLook(0.0f,30.0f,0.5f);
+            FishingMod.instance.smoothLook(0.0f,30.0f,0.5f);
             changeState(FishingState.COOLDOWN);
         }
 
