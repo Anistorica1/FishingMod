@@ -3,6 +3,7 @@ package com.example.fullmod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.util.ChatComponentText;
+import java.util.Random;
 
 import java.lang.reflect.Field;
 
@@ -19,7 +20,7 @@ public class AutoFishingController {
     }
 
     private final Minecraft mc = Minecraft.getMinecraft();
-
+    private static final Random RANDOM = new Random();
     private FishingState state = FishingState.IDLE;
     private int stateTick = 0;   // 进入当前状态后经过的 tick 数
     public void start() {
@@ -83,9 +84,8 @@ public class AutoFishingController {
             changeState(FishingState.CASTING);
             return;
         }
-        mc.thePlayer.addChatMessage(new ChatComponentText(
-                "hook.motionY : " + hook.motionY
-        ));
+        if(stateTick % 20 == 0)
+            FullTestMod.instance.smoothLook(-0.5f+RANDOM.nextFloat(),29.5f+RANDOM.nextFloat(),0.2f);
         // 鱼上钩：鱼钩被猛地下拉
         if (hook.motionY < -0.04) {
             changeState(FishingState.HYPERION);
